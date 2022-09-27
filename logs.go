@@ -14,21 +14,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// A Handler struct represents logger.Storage interface
-type Handler struct {
-	storage logger.Storage
-}
+var logs logger.Storage
 
-// Get initialises the package.
-// It returns the package handler
-func Get() *Handler {
-	logger := logger.New()
-	return &Handler{storage: logger}
+// init initialises logger at a global level
+func init() {
+	logs = logger.New()
 }
 
 // Info accepts the string message
 // It logs the info level message with method name and timestamp
-func (lg *Handler) Info(str string) {
+func Info(str string) {
 
 	// Skip this function, and fetch the PC and file for its parent
 	pc, _, _, _ := runtime.Caller(1)
@@ -44,12 +39,12 @@ func (lg *Handler) Info(str string) {
 		"method": method,
 	}
 
-	lg.storage.Info(fields, str)
+	logs.Info(fields, str)
 }
 
 // Error accepts the string message and error
 // It logs the error level message with method name and timestamp
-func (lg *Handler) Error(msg string, errr error) {
+func Error(msg string, errr error) {
 	// Skip this function, and fetch the PC and file for its parent
 	pc, _, _, _ := runtime.Caller(1)
 
@@ -65,22 +60,22 @@ func (lg *Handler) Error(msg string, errr error) {
 	}
 
 	msg = msg + ": " + errr.Error()
-	lg.storage.Error(fields, msg)
+	logs.Error(fields, msg)
 }
 
 // Fatal accepts the method name, string message and error
 // It logs the message and exits the program
-func (lg *Handler) Fatal(method string, msg string, errr error) {
+func Fatal(method string, msg string, errr error) {
 	fields := logrus.Fields{
 		"method": method,
 	}
 
 	msg = msg + ": " + errr.Error()
-	lg.storage.Fatal(fields, msg)
+	logs.Fatal(fields, msg)
 }
 
 // Enter logs the start time of the method
-func (lg *Handler) Enter() (time.Time, string) {
+func Enter() (time.Time, string) {
 	start := time.Now()
 
 	// Skip this function, and fetch the PC and file for its parent
@@ -98,17 +93,17 @@ func (lg *Handler) Enter() (time.Time, string) {
 	}
 
 	msg := "Started " + method
-	lg.storage.Info(fields, msg)
+	logs.Info(fields, msg)
 
 	return start, method
 }
 
 // Exit mesures the execution time of the method
-func (lg *Handler) Exit(start time.Time, name string) {
+func Exit(start time.Time, name string) {
 	elapsed := time.Since(start)
 	fields := logrus.Fields{
 		"method": name,
 	}
 	msg := fmt.Sprintf("%s took %s", name, elapsed)
-	lg.storage.Info(fields, msg)
+	logs.Info(fields, msg)
 }

@@ -16,11 +16,7 @@ import (
     prettylogs "github.com/ashokhirpara1/golang-prettylogs"
 )
 
-var logs *prettylogs.Handler
-
 func main() {
-    // Initialize structured logs
-    logs = prettylogs.Get()
     logs.Info("main function to boot up everything")
 }
 ```
@@ -34,6 +30,6 @@ func main() {
 ### Measure function's execution time in logs
 ```
 func functionName() {
-    defer logs.log.Exit(logs.log.Enter())
+    defer prettylogs.Exit(prettylogs.Enter())
 }
 ```

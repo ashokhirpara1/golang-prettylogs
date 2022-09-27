@@ -10,24 +10,16 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
-var logs *Handler
-
-func init() {
-	logs = Get()
-
-	logs.Info("testing")
-}
-
 func TestInfo(t *testing.T) {
 	logMessage := "testing info method message"
 
 	ctlr := gomock.NewController(t)
 	mockLogger := mocklogger.NewMockStorage(ctlr)
-	logs.storage = mockLogger
+	logs = mockLogger
 
 	mockLogger.EXPECT().Info(gomock.Any(), gomock.Eq(logMessage)).Times(1)
 
-	logs.Info(logMessage)
+	Info(logMessage)
 }
 
 func TestError(t *testing.T) {
@@ -37,11 +29,11 @@ func TestError(t *testing.T) {
 
 	ctlr := gomock.NewController(t)
 	mockLogger := mocklogger.NewMockStorage(ctlr)
-	logs.storage = mockLogger
+	logs = mockLogger
 
 	mockLogger.EXPECT().Error(gomock.Any(), gomock.Eq(logFullMessage)).Times(1)
 
-	logs.Error(logMessage, logError)
+	Error(logMessage, logError)
 }
 
 func TestFatal(t *testing.T) {
@@ -51,11 +43,11 @@ func TestFatal(t *testing.T) {
 
 	ctlr := gomock.NewController(t)
 	mockLogger := mocklogger.NewMockStorage(ctlr)
-	logs.storage = mockLogger
+	logs = mockLogger
 
 	mockLogger.EXPECT().Fatal(gomock.Any(), gomock.Eq(logFullMessage)).Times(1)
 
-	logs.Fatal("TestFatal", logMessage, logError)
+	Fatal("TestFatal", logMessage, logError)
 }
 
 func TestEnter(t *testing.T) {
@@ -65,11 +57,11 @@ func TestEnter(t *testing.T) {
 
 	ctlr := gomock.NewController(t)
 	mockLogger := mocklogger.NewMockStorage(ctlr)
-	logs.storage = mockLogger
+	logs = mockLogger
 
 	mockLogger.EXPECT().Info(gomock.Any(), gomock.Eq(logFullMessage)).Times(1)
 
-	if startTime, method := logs.Enter(); method != logMethod {
+	if startTime, method := Enter(); method != logMethod {
 		t.Errorf("Enter() = %v, %s, didn't return %s", startTime, method, logMethod)
 	}
 }
@@ -80,9 +72,9 @@ func TestExit(t *testing.T) {
 
 	ctlr := gomock.NewController(t)
 	mockLogger := mocklogger.NewMockStorage(ctlr)
-	logs.storage = mockLogger
+	logs = mockLogger
 
 	mockLogger.EXPECT().Info(gomock.Any(), gomock.Any()).Times(1)
 
-	logs.Exit(startTime, logMethod)
+	Exit(startTime, logMethod)
 }
