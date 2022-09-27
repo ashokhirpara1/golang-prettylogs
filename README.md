@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-    logs.Info("main function to boot up everything")
+    prettylogs.Info("main function to boot up everything")
 }
 ```
 
