@@ -6,14 +6,14 @@ Golang structured logging library
 ### Get the go-prettylogs library
 
 ```
-$ go get github.com/ashokhirpara1/go-prettylogs
+$ go get github.com/ashokhirpara1/golang-prettylogs
 ```
 
 ```go
 package main
 
 import (
-    prettylogs "github.com/ashokhirpara1/go-prettylogs"
+    prettylogs "github.com/ashokhirpara1/golang-prettylogs"
 )
 
 var logs *prettylogs.Handler
